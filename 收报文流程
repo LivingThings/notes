@@ -1,0 +1,19 @@
+@startuml
+participant "外部网络" as client
+participant "网卡" as nc
+participant "dma" as dma
+participant "内核" as core
+participant "协议栈" as net
+participant "socket" as socket
+participant "用户进程" as proc
+
+== 一个报文的获取 ==
+client -> nc:报文
+alt 混杂模式 或 目标是本机Mac
+nc -> dma : 指挥dma从网卡拷贝到内核缓冲区
+nc -> core : 发送软中断
+end
+core -> net : ip tcp层报文解析, 查找对应socket
+net -> socket : 填加至socket缓冲区
+proc -> socket : 读
+@enduml
