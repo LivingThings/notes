@@ -1,0 +1,26 @@
+@startuml
+participant "客户端" as client
+participant "服务器" as server
+participant "缓冲区" as buffer
+participant "syn cookie" as cookie
+
+
+== 三次握手 ==
+client -> server: syn
+alt 旧
+server -> buffer : 半开连接缓冲
+else 新
+server -> cookie : 建立syn cookie
+end
+server -> client : syn  ack
+client -> server : ack
+alt 旧
+server -> buffer : 校验
+else 新
+server -> cookie : 校验
+end
+alt 校验通过
+server -> server : 建立连接
+end
+
+@enduml
